@@ -1,0 +1,33 @@
+num_obs = 0
+   do n = 1, iv%info(sound)%nlocal
+     if (iv%info(sound)%proc_domain(1,n)) num_obs = num_obs + 1
+   end do
+   if (num_obs > 0) then
+      write(ounit,'(a20,i8)')'sound', num_obs    
+      num_obs = 0
+      do n = 1, iv%info(sound)%nlocal
+         if (iv%info(sound)%proc_domain(1,n)) then
+            num_obs = num_obs + 1
+            write(ounit,'(i8)')iv%info(sound)%levels(n)
+            do k = 1, iv%info(sound)%levels(n)
+               write(ounit,'(2i8,a5,2f9.2,f17.7,5(2f17.7,i8,2f17.7))')&
+                  num_obs,k, iv%info(sound)%id(n), &  ! Station
+                  iv%info(sound)%lat(k,n), &       ! Latitude
+                  iv%info(sound)%lon(k,n), &       ! Longitude
+                  iv%sound(n)%p(k),        &       ! Obs Pressure
+                  ob%sound(n)%u(k),        &
+                  iv%sound(n)%u(k)%inv, iv%sound(n)%u(k)%qc, iv%sound(n)%u(k)%error, &
+                  re%sound(n)%u(k),        &
+                  ob%sound(n)%v(k),        &
+                  iv%sound(n)%v(k)%inv, iv%sound(n)%v(k)%qc, iv%sound(n)%v(k)%error, &
+                  re%sound(n)%v(k),        &
+                  ob%sound(n)%t(k),        &
+                  iv%sound(n)%t(k)%inv, iv%sound(n)%t(k)%qc, iv%sound(n)%t(k)%error, &
+                  re%sound(n)%t(k),        &
+                  ob%sound(n)%q(k),        &
+                  iv%sound(n)%q(k)%inv, iv%sound(n)%q(k)%qc, iv%sound(n)%q(k)%error, &
+                  re%sound(n)%q(k)
+            end do
+         end if
+      end do
+   end if
